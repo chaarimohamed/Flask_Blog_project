@@ -48,7 +48,11 @@ def token_required(f):
 
 ## add a new user
 @app.route('/adduser',methods=['POST'])
-def index():
+@token_required
+def index(current_user):
+    if not current_user[4]:
+      return jsonify({'message':'Cannot perform that function!'})
+
     data=request.get_json()
     name=data['username']
     password=data['password']

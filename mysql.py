@@ -296,5 +296,10 @@ def delete_article(current_user,user_id,name):
     return jsonify({'message':'The article is deleted'})
 
 
+@app.route('/')
+def home():
+    return "Welcome"
+
+
 if __name__=="__main__":
     app.run(debug=True)

@@ -165,9 +165,6 @@ def delete_user(current_user,public_id):
 
 
 
-
-
-
 #login
 @app.route('/login',methods=['GET'])
 def login():
@@ -201,11 +198,6 @@ def login():
         return token
 
     return  make_response('Could not verify',401,{'WWW-Authenticate':'Basic realm="Login required!"'})
-
-
-
-
-
 
 
 
@@ -302,9 +294,8 @@ def delete_article(current_user,user_id,name):
 
     return jsonify({'message':'The article is deleted'})
 
-
-
-
+def chaari():
+    return True
 
 if __name__=="__main__":
     app.run(debug=True)

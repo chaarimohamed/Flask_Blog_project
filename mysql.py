@@ -1,4 +1,4 @@
-from ast import Return
+
 from unicodedata import name
 from flask import Flask,render_template,request,jsonify,make_response
 from flask_mysqldb import MySQL
@@ -47,21 +47,20 @@ def token_required(f):
     return decorated    
 
 ## add a new user
-@app.route('/',methods=['GET','POST'])
+@app.route('/adduser',methods=['POST'])
 def index():
-    ## for the post 
-    if request.method=='POST':
-        name=request.form['username']
-        password=request.form['password']
-        hashed_password=generate_password_hash(password,method='sha256')
-        public_id=str(uuid.uuid4())
-        cur=mysql.connection.cursor()
-        cur.execute("INSERT INTO User (name,password,public_id) Values (%s,%s,%s)",(name,hashed_password,public_id))
-        mysql.connection.commit()
-        cur.close()
+    data=request.get_json()
+    name=data['username']
+    password=data['password']
+    hashed_password=generate_password_hash(password,method='sha256')
+    public_id=str(uuid.uuid4())
+    cur=mysql.connection.cursor()
+    cur.execute("INSERT INTO User (name,password,public_id) Values (%s,%s,%s)",(name,hashed_password,public_id))
+    mysql.connection.commit()
+    cur.close()
         
   
-    return render_template('index.html')
+    return jsonify({'message':'New user created!'})
 
 #return users list 
 @app.route('/users',methods=['GET']) 
@@ -164,7 +163,6 @@ def delete_user(current_user,public_id):
     return jsonify({'message':'The user has been deleted!'})
 
 
-
 #login
 @app.route('/login',methods=['GET'])
 def login():
@@ -198,7 +196,6 @@ def login():
         return token
 
     return  make_response('Could not verify',401,{'WWW-Authenticate':'Basic realm="Login required!"'})
-
 
 
 #Assign an article (completed)
@@ -294,8 +291,6 @@ def delete_article(current_user,user_id,name):
 
     return jsonify({'message':'The article is deleted'})
 
-def chaari():
-    return True
 
 if __name__=="__main__":
     app.run(debug=True)
